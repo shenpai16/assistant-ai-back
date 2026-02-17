@@ -6,6 +6,7 @@ use App\Entity\Company;
 use App\Entity\Conversation;
 use App\Entity\Message;
 use App\Repository\ConversationRepository;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ChatService
 {
