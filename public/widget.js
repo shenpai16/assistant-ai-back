@@ -83,6 +83,41 @@
             margin-left: auto;
         }
 
+        #ai-loader {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: #f3f4f6;
+            padding: 8px 10px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            max-width: 80%;
+            font-style: italic;
+            opacity: 0.8;
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            background: #4f46e5;
+            border-radius: 50%;
+            animation: blink 1.4s infinite both;
+        }
+
+        .dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes blink {
+            0% { opacity: .2; }
+            20% { opacity: 1; }
+            100% { opacity: .2; }
+        }
+
         #ai-chat-input {
             display: flex;
             border-top: 1px solid #ddd;
@@ -142,6 +177,9 @@
 
         input.value = "";
 
+        showLoader();
+
+
         // Appel API
         const response = await fetch("http://localhost:8000/api/chat", {
             method: "POST",
@@ -155,20 +193,67 @@
 
         const data = await response.json();
 
+        hideLoader();
+
         if (data.response) {
-            addMessage(data.response, "ai");
+            addMessage(data.response, "ai", true);
         } else {
             addMessage("Erreur : impossible de contacter l'assistant.", "ai");
         }
     }
 
     // --- Affichage des messages ---
-    function addMessage(text, type) {
+    function addMessage(text, type, typing = false) {
         const div = document.createElement("div");
         div.className = type === "user" ? "user-msg" : "ai-msg";
-        div.textContent = text;
+
         messagesDiv.appendChild(div);
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+        if (!typing) {
+            div.textContent = text;
+            return;
+        }
+
+        // Effet typing
+        typeWriterEffect(text, (partial) => {
+            div.textContent = partial;
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        });
+    }
+
+    function showLoader() {
+        const loader = document.createElement("div");
+        loader.id = "ai-loader";
+
+        loader.innerHTML = `
+            L’assistant écrit
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+        `;
+
+        messagesDiv.appendChild(loader);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    function hideLoader() {
+        const loader = document.getElementById("ai-loader");
+        if (loader) loader.remove();
+    }
+
+    function typeWriterEffect(text, callback) {
+        let i = 0;
+        const speed = 15; // vitesse en ms par caractère
+
+        const interval = setInterval(() => {
+            callback(text.substring(0, i));
+            i++;
+
+            if (i > text.length) {
+                clearInterval(interval);
+            }
+        }, speed);
     }
 
     // --- Envoi via bouton ---
