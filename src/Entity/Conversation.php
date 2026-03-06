@@ -105,4 +105,17 @@ class Conversation
 
         return $this;
     }
+
+    public function __toString(): string
+    {
+        $companyName = $this->getCompany()?->getName() ?? 'Entreprise inconnue';
+        $date = $this->getCreatedAt()?->format('d/m/Y H:i') ?? 'Date inconnue';
+
+        return sprintf('%s | %s', $this->getCompany()->getName(), $this->getSessionId());
+    }
+
+public function getMessagesView(): array
+{
+    return $this->getMessages()->toArray();
+}
 }

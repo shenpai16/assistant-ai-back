@@ -37,6 +37,7 @@ class Company
     public function __construct()
     {
         $this->conversations = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -120,5 +121,10 @@ class Company
         }
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->name ?? 'Entreprise';
     }
 }

@@ -1,0 +1,10 @@
+easy_admin:
+    design:
+        menu:
+            - { label: 'Dashboard', icon: 'fa fa-home', route: 'admin' }
+
+            - { type: 'section', label: 'Assistant IA' }
+
+            - { label: 'Entreprises', icon: 'fa fa-building', crud_controller: App\Controller\Admin\CompanyCrudController }
+            - { label: 'Conversations', icon: 'fa fa-comments', crud_controller: App\Controller\Admin\ConversationCrudController }
+            - { label: 'Messages', icon: 'fa fa-envelope', crud_controller: App\Controller\Admin\MessageCrudController }
