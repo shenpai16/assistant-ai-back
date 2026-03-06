@@ -114,18 +114,8 @@ class Conversation
         return sprintf('%s | %s', $this->getCompany()->getName(), $this->getSessionId());
     }
 
-    public function getMessagesView(): string
-    {
-        $output = "";
-
-        foreach ($this->getMessages() as $message) {
-            $sender = $message->getRole() === 'user' ? 'Utilisateur' : 'IA';
-            $date = $message->getCreatedAt()->format('d/m/Y H:i');
-
-            $output .= "[$date] $sender :\n";
-            $output .= $message->getContent() . "\n\n";
-        }
-
-        return $output;
-    }
+public function getMessagesView(): array
+{
+    return $this->getMessages()->toArray();
+}
 }

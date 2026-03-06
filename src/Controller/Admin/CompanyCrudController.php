@@ -34,7 +34,7 @@ class CompanyCrudController extends AbstractCrudController
                 ->setNumOfRows(12)
                 ->setHelp('Décrivez le contexte de l\'IA pour cette entreprise.'),
 
-            DateTimeField::new('createdAt', 'Date de création')
+            DateTimeField::new('created_at', 'Date de création')
                 ->hideOnForm(),
         ];
     }

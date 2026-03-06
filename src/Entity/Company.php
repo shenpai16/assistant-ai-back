@@ -37,6 +37,7 @@ class Company
     public function __construct()
     {
         $this->conversations = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
