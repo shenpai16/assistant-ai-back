@@ -4,80 +4,154 @@
     <meta charset="UTF-8">
     <title>Connexion</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap">
-</head>
 
-<body style="background:#f5f6fa; font-family: Inter, sans-serif;">
+    <style>
+        /* --- Fond animé premium --- */
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(120deg, #0d1b3d, #1e3c72, #2a5298);
+            background-size: 300% 300%;
+            animation: gradientMove 12s ease infinite;
+            font-family: Inter, sans-serif;
+            color: white;
+        }
 
-<div class="login-wrapper" style="
-    max-width: 420px;
-    margin: 80px auto;
-    padding: 40px;
-    background: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-    text-align: center;
-">
-    <div style="margin-bottom: 25px;">
-        <img src="/images/logo_officiel_clean.svg" alt="Logo" style="height: 60px; margin-bottom: 10px;">
-        <h2 style="font-weight: 600; font-size: 22px; margin: 0;">Espace sécurisé</h2>
-        <p style="color: #666; font-size: 14px; margin-top: 6px;">
-            Connectez-vous pour accéder à votre tableau de bord.
-        </p>
-    </div>
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
 
-    {% if error %}
-        <div style="background:#ffe5e5; color:#b30000; padding:12px; border-radius:8px; margin-bottom:20px;">
-            Identifiants incorrects.
-        </div>
-    {% endif %}
+        /* --- Carte en verre premium --- */
+        .login-wrapper {
+            max-width: 420px;
+            margin: 80px auto;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(18px);
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+            animation: fadeIn 0.8s ease forwards;
+            transform: translateY(20px);
+            opacity: 0;
+        }
 
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-    <form method="post" action="{{ path('app_login') }}" style="text-align: left;" enctype="application/x-www-form-urlencoded">
-        <label for="inputEmail" style="font-size: 14px; font-weight: 500;">Adresse email</label>
-        <input type="email" name="_email" id="inputEmail" value="{{ last_username }}" required autofocus
-            style="
-                width: 100%;
-                padding: 12px;
-                margin-top: 6px;
-                margin-bottom: 18px;
-                border-radius: 10px;
-                border: 1px solid #ddd;
-                font-size: 15px;
-            "
-        >
-
-        <label for="inputPassword" style="font-size: 14px; font-weight: 500;">Mot de passe</label>
-        <input type="password" name="_password" id="inputPassword" required
-            style="
-                width: 100%;
-                padding: 12px;
-                margin-top: 6px;
-                margin-bottom: 25px;
-                border-radius: 10px;
-                border: 1px solid #ddd;
-                font-size: 15px;
-            "
-        >
-        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-        <button type="submit" style="
+        /* --- Inputs premium --- */
+        input[type="email"], input[type="password"] {
             width: 100%;
             padding: 12px;
-            background: #0066ff;
+            margin-top: 6px;
+            margin-bottom: 18px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.4);
+            background: rgba(255,255,255,0.15);
+            color: white;
+            font-size: 15px;
+            transition: 0.25s;
+        }
+
+        input[type="email"]:focus, input[type="password"]:focus {
+            border-color: #66aaff;
+            background: rgba(255,255,255,0.25);
+            box-shadow: 0 0 0 4px rgba(102,170,255,0.25);
+            outline: none;
+        }
+
+        /* --- Bouton premium --- */
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #4c8dff, #0066ff);
             border: none;
             border-radius: 10px;
             font-size: 16px;
             font-weight: 600;
             color: white;
             cursor: pointer;
-            transition: 0.2s;
-        ">
-            Se connecter
-        </button>
-    </form>
+            transition: 0.25s;
+        }
 
-    <p style="margin-top: 25px; font-size: 13px; color: #999;">
-        © {{ "now"|date("Y") }} Votre entreprise — Tous droits réservés
-    </p>
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,102,255,0.35);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        /* --- Message d’erreur animé --- */
+        .error-box {
+            background: rgba(255, 80, 80, 0.25);
+            border: 1px solid rgba(255, 80, 80, 0.5);
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            color: #ffb3b3;
+            animation: shake 0.3s ease;
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            50% { transform: translateX(4px); }
+            75% { transform: translateX(-4px); }
+            100% { transform: translateX(0); }
+        }
+
+        .center-container {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="center-container"> 
+    <div class="login-wrapper">
+        <div style="text-align:center; margin-bottom: 25px;">
+            <img src="/images/logo_officiel_clean.svg" alt="Logo" style="height: 60px; margin-bottom: 10px;">
+            <h2 style="font-weight: 600; font-size: 22px; margin: 0;">Espace sécurisé</h2>
+            <p style="color: #ddd; font-size: 14px; margin-top: 6px;">
+                Connectez-vous pour accéder à votre tableau de bord.
+            </p>
+        </div>
+
+        {% if error %}
+            <div class="error-box">
+                Identifiants incorrects.
+            </div>
+        {% endif %}
+
+        <form method="post" action="{{ path('app_login') }}" style="text-align: left;">
+            <label for="inputEmail" style="font-size: 14px; font-weight: 500;">Adresse email</label>
+            <input type="email" name="_email" id="inputEmail" value="{{ last_username }}" required autofocus>
+
+            <label for="inputPassword" style="font-size: 14px; font-weight: 500;">Mot de passe</label>
+            <input type="password" name="_password" id="inputPassword" required>
+
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+            <button type="submit">Se connecter</button>
+        </form>
+
+        <p style="margin-top: 25px; font-size: 13px; color: #ccc; text-align:center;">
+            © {{ "now"|date("Y") }} Raphael Benmimoune — Tous droits réservés
+        </p>
+    </div>
 </div>
 
 </body>
