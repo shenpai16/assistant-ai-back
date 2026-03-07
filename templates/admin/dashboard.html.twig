@@ -1,0 +1,229 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content %}
+
+<style>
+    /* --- Layout global : 2 colonnes (dashboard bleu + sidebar noire) --- */
+    .dashboard-layout {
+        display: grid;
+        grid-template-columns: 1fr 380px; /* colonne principale + sidebar large */
+        gap: 30px;
+        width: 100%;
+        min-height: calc(100vh - 80px);
+        margin: -30px;
+        padding: 40px;
+        box-sizing: border-box;
+    }
+
+    /* --- Zone principale (bleue) --- */
+    .dashboard-wrapper {
+        background: linear-gradient(120deg, #0d1b3d, #1e3c72, #2a5298);
+        background-size: 300% 300%;
+        animation: gradientMove 12s ease infinite;
+        border-radius: 20px;
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+
+    @keyframes gradientMove {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* --- Sidebar noire premium --- */
+    .right-sidebar {
+        background: rgba(0, 0, 0, 0.55);
+        backdrop-filter: blur(22px);
+        border-radius: 20px;
+        padding: 30px;
+        height: calc(100vh - 80px);
+        box-shadow: -15px 0 35px rgba(0,0,0,0.45);
+        border-left: 1px solid rgba(255,255,255,0.12);
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        color: white;
+    }
+
+    .sidebar-section {
+        background: rgba(255, 255, 255, 0.08);
+        padding: 22px;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    }
+
+    .sidebar-title {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 12px;
+        opacity: 0.95;
+    }
+
+    .sidebar-item {
+        font-size: 15px;
+        opacity: 0.85;
+        margin-bottom: 8px;
+        cursor: pointer;
+        transition: 0.25s;
+        display: block;
+        text-decoration: none;
+        color: white;
+    }
+
+    .sidebar-item:hover {
+        opacity: 1;
+        transform: translateX(6px);
+    }
+
+    /* --- KPI Cards --- */
+    .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 25px;
+    }
+
+    .kpi-card {
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(18px);
+        border-radius: 18px;
+        padding: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+        color: white;
+        animation: fadeIn 0.8s ease forwards;
+        transform: translateY(20px);
+        opacity: 0;
+        transition: 0.3s;
+    }
+
+    .kpi-card:hover {
+        transform: translateY(10px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.35);
+    }
+
+    @keyframes fadeIn {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .two-columns {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 25px;
+    }
+
+    h1 {
+        color: white;
+        margin-bottom: 10px;
+    }
+</style>
+
+<div class="dashboard-layout">
+
+    <!-- Zone principale bleue -->
+    <div class="dashboard-wrapper">
+
+        <h1>Dashboard</h1>
+
+        <!-- KPIs -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-title">Entreprises</div>
+                <div class="kpi-value">{{ companyCount }}</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-title">Conversations</div>
+                <div class="kpi-value">{{ conversationCount }}</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-title">Messages</div>
+                <div class="kpi-value">{{ messageCount }}</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-title">Messages (24h)</div>
+                <div class="kpi-value">{{ messageLast24h }}</div>
+            </div>
+        </div>
+
+        <!-- Graphique + Top entreprises -->
+        <div class="two-columns">
+
+            <div class="kpi-card" style="height: 350px;">
+                <h3 style="margin-bottom: 15px;">Activité des messages</h3>
+                <canvas id="messagesChart"></canvas>
+            </div>
+
+            <div class="kpi-card">
+                <h3 style="margin-bottom: 15px;">Top entreprises</h3>
+
+                {% if topCompanies is defined %}
+                    {% for company in topCompanies %}
+                        <div style="margin-bottom: 15px;">
+                            <strong>{{ company.name }}</strong><br>
+                            <span style="opacity: 0.8;">{{ company.msgCount }} messages</span>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p style="opacity: 0.7;">Aucune donnée disponible.</p>
+                {% endif %}
+            </div>
+
+        </div>
+
+        <!-- Dernières conversations -->
+        <div class="kpi-card">
+            <h3 style="margin-bottom: 15px;">Dernières conversations</h3>
+
+            {% if lastConversations is defined %}
+                {% for conv in lastConversations %}
+                    <div style="margin-bottom: 12px;">
+                        <strong>{{ conv.company.name }}</strong> — {{ conv.sessionId }}<br>
+                        <span style="opacity: 0.8;">{{ conv.createdAt|date('d/m/Y H:i') }}</span>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p style="opacity: 0.7;">Aucune conversation récente.</p>
+            {% endif %}
+        </div>
+
+    </div>
+
+    <!-- Sidebar noire premium -->
+    <div class="right-sidebar">
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Ton compte</div>
+            <div class="sidebar-item">{{ app.user.email }}</div>
+            <div class="sidebar-item">Dernière connexion : {{ "now"|date("d/m/Y H:i") }}</div>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Statut du système</div>
+            <div class="sidebar-item">API : ✔️ Opérationnelle</div>
+            <div class="sidebar-item">Latence : 42ms</div>
+            <div class="sidebar-item">Uptime : 99.98%</div>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Raccourcis</div>
+            <a href="{{ path('admin') }}" class="sidebar-item">🏠 Dashboard</a>
+            <a href="{{ path('admin_company_index') }}" class="sidebar-item">🏢 Entreprises</a>
+            <a href="{{ path('admin_conversation_index') }}" class="sidebar-item">💬 Conversations</a>
+            <a href="{{ path('admin_message_index') }}" class="sidebar-item">✉️ Messages</a>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
