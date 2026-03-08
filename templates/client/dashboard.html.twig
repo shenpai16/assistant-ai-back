@@ -3,13 +3,100 @@
 {% block content %}
 
 <style>
-    .client-dashboard {
+    /* --- Layout global : 2 colonnes (dashboard bleu + sidebar noire) --- */
+    .dashboard-layout {
+        display: grid;
+        grid-template-columns: 1fr 380px;
+        gap: 30px;
+        width: 100%;
+        min-height: calc(100vh - 80px);
+        margin: -30px;
+        padding: 40px;
+        box-sizing: border-box;
+    }
+
+    /* --- Zone principale (bleue) --- */
+    .dashboard-wrapper {
+        background: linear-gradient(120deg, #0d1b3d, #1e3c72, #2a5298);
+        background-size: 300% 300%;
+        animation: gradientMove 12s ease infinite;
+        border-radius: 20px;
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+        color: white;
+    }
+
+    /* Titres dans les cartes bleues */
+    .dashboard-wrapper h3,
+    .dashboard-wrapper .kpi-card h3 {
+        color: #f5f7fa !important; /* blanc légèrement bleuté premium */
+        text-shadow: 0 0 6px rgba(0, 0, 0, 0.45);
+        font-weight: 600;
+        letter-spacing: 0.3px;
+    }
+
+    /* Sous‑titres ou textes secondaires */
+    .dashboard-wrapper .kpi-card span,
+    .dashboard-wrapper .kpi-card small {
+    color: rgba(255, 255, 255, 0.85) !important;
+    }
+
+    @keyframes gradientMove {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* --- Sidebar noire premium --- */
+    .right-sidebar {
+        background: rgba(0, 0, 0, 0.55);
+        backdrop-filter: blur(22px);
+        border-radius: 20px;
+        padding: 30px;
+        height: calc(100vh - 80px);
+        box-shadow: -15px 0 35px rgba(0,0,0,0.45);
+        border-left: 1px solid rgba(255,255,255,0.12);
         display: flex;
         flex-direction: column;
         gap: 30px;
-        padding: 20px;
+        color: white;
     }
 
+    .sidebar-section {
+        background: rgba(255, 255, 255, 0.08);
+        padding: 22px;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    }
+
+    .sidebar-title {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 12px;
+        opacity: 0.95;
+    }
+
+    .sidebar-item {
+        font-size: 15px;
+        opacity: 0.85;
+        margin-bottom: 8px;
+        cursor: pointer;
+        transition: 0.25s;
+        display: block;
+        text-decoration: none;
+        color: white;
+    }
+
+    .sidebar-item:hover {
+        opacity: 1;
+        transform: translateX(6px);
+    }
+
+    /* --- KPI Cards --- */
     .kpi-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -24,90 +111,111 @@
         border: 1px solid rgba(255, 255, 255, 0.25);
         box-shadow: 0 10px 25px rgba(0,0,0,0.25);
         color: white;
+        animation: fadeIn 0.8s ease forwards;
+        transform: translateY(20px);
+        opacity: 0;
         transition: 0.3s;
     }
 
     .kpi-card:hover {
-        transform: translateY(-5px);
+        transform: translateY(10px);
         box-shadow: 0 15px 35px rgba(0,0,0,0.35);
     }
 
-    .section-card {
-        background: rgba(255, 255, 255, 0.10);
-        backdrop-filter: blur(15px);
-        border-radius: 18px;
-        padding: 25px;
-        border: 1px solid rgba(255, 255, 255, 0.20);
+    @keyframes fadeIn {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .two-columns {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 25px;
+    }
+
+    h1 {
         color: white;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-    }
-
-    h2 {
-        color: white;
-        margin-bottom: 15px;
-    }
-
-    .conversation-item {
-        padding: 12px 0;
-        border-bottom: 1px solid rgba(255,255,255,0.15);
-    }
-
-    .conversation-item:last-child {
-        border-bottom: none;
-    }
-
-    .conversation-item strong {
-        color: #fff;
-    }
-
-    .conversation-item span {
-        opacity: 0.8;
-        font-size: 14px;
+        margin-bottom: 10px;
     }
 </style>
 
-<div class="client-dashboard">
+<div class="dashboard-layout">
 
-    <h1 style="color:white;">Bienvenue dans votre espace client</h1>
+    <!-- Zone principale bleue -->
+    <div class="dashboard-wrapper">
 
-    <!-- KPIs -->
-    <div class="kpi-grid">
-        <div class="kpi-card">
-            <h3>Messages reçus</h3>
-            <p style="font-size: 28px; font-weight: bold;">{{ messagesCount }}</p>
+        <h1>Votre chatbot</h1>
+
+        <!-- KPIs -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-title">Conversations</div>
+                <div class="kpi-value">{{ conversationsCount }}</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-title">Messages</div>
+                <div class="kpi-value">{{ messagesCount }}</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-title">Messages (24h)</div>
+                <div class="kpi-value">{{ messagesLast24h }}</div>
+            </div>
         </div>
 
-        <div class="kpi-card">
-            <h3>Conversations</h3>
-            <p style="font-size: 28px; font-weight: bold;">{{ conversationsCount }}</p>
+        <!-- Graphique + Dernières conversations -->
+        <div class="two-columns">
+
+            <div class="kpi-card" style="height: 350px;">
+                <h3 style="margin-bottom: 15px;">Activité des messages</h3>
+                <canvas id="clientMessagesChart"></canvas>
+            </div>
+
+            <div class="kpi-card">
+                <h3 style="margin-bottom: 15px;">Dernières conversations</h3>
+
+                {% if lastConversations is defined %}
+                    {% for conv in lastConversations %}
+                        <div style="margin-bottom: 12px;">
+                            <strong>{{ conv.sessionId }}</strong><br>
+                            <span style="opacity: 0.8;">{{ conv.createdAt|date('d/m/Y H:i') }}</span>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p style="opacity: 0.7;">Aucune conversation récente.</p>
+                {% endif %}
+            </div>
+
         </div>
 
-        <div class="kpi-card">
-            <h3>Messages (24h)</h3>
-            <p style="font-size: 28px; font-weight: bold;">{{ messagesLast24h }}</p>
-        </div>
     </div>
 
-    <!-- Activité -->
-    <div class="section-card">
-        <h2>Activité récente</h2>
-        <canvas id="clientMessagesChart" height="120"></canvas>
-    </div>
+    <!-- Sidebar noire premium -->
+    <div class="right-sidebar">
 
-    <!-- Dernières conversations -->
-    <div class="section-card">
-        <h2>Dernières conversations</h2>
+        <div class="sidebar-section">
+            <div class="sidebar-title">Ton compte</div>
+            <div class="sidebar-item">{{ app.user.email }}</div>
+            <div class="sidebar-item">Dernière connexion : {{ "now"|date("d/m/Y H:i") }}</div>
+        </div>
 
-        {% if lastConversations is defined and lastConversations|length > 0 %}
-            {% for conv in lastConversations %}
-                <div class="conversation-item">
-                    <strong>{{ conv.sessionId }}</strong><br>
-                    <span>{{ conv.createdAt|date('d/m/Y H:i') }}</span>
-                </div>
-            {% endfor %}
-        {% else %}
-            <p style="opacity:0.7;">Aucune conversation récente.</p>
-        {% endif %}
+        <div class="sidebar-section">
+            <div class="sidebar-title">Statut du système</div>
+            <div class="sidebar-item">API : ✔️ Opérationnelle</div>
+            <div class="sidebar-item">Latence : 42ms</div>
+            <div class="sidebar-item">Uptime : 99.98%</div>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Raccourcis</div>
+            <a href="{{ path('client_dashboard') }}" class="sidebar-item">🏠 Dashboard</a>
+            <a href="{{ ea_url().setController('App\\Controller\\Client\\ConversationClientCrudController') }}" class="sidebar-item">💬 Conversations</a>
+            <a href="{{ ea_url().setController('App\\Controller\\Client\\MessageClientCrudController') }}" class="sidebar-item">✉️ Messages</a>
+        </div>
+
     </div>
 
 </div>
@@ -115,6 +223,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     const ctx = document.getElementById('clientMessagesChart');
+
     new Chart(ctx, {
         type: 'line',
         data: {
@@ -122,19 +231,60 @@
             datasets: [{
                 label: 'Messages',
                 data: {{ chartData|json_encode|raw }},
-                borderColor: '#4ea1ff',
-                backgroundColor: 'rgba(78,161,255,0.3)',
-                borderWidth: 2,
-                tension: 0.3,
+                borderColor: '#7fc8ff',              // bleu clair premium
+                backgroundColor: 'rgba(127,200,255,0.25)',
+                pointBackgroundColor: '#ffffff',     // points blancs
+                pointBorderColor: '#7fc8ff',
+                pointHoverBackgroundColor: '#7fc8ff',
+                pointHoverBorderColor: '#ffffff',
+                borderWidth: 2.5,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+                tension: 0.35,
                 fill: true
             }]
         },
         options: {
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#e8f1ff',           // texte de la légende
+                        font: { size: 14 }
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0,0,0,0.75)',
+                    titleColor: '#ffffff',
+                    bodyColor: '#dbe9ff',
+                    borderColor: '#7fc8ff',
+                    borderWidth: 1,
+                    padding: 12,
+                    displayColors: false
+                }
+            },
             scales: {
-                y: { beginAtZero: true }
+                y: {
+                    beginAtZero: true,
+                    min: 0,
+                    ticks: {
+                        color: '#dbe9ff',
+                        font: { size: 13 }
+                    },
+                    grid: {
+                        color: 'rgba(255,255,255,0.08)'
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: '#dbe9ff',
+                        font: { size: 13 }
+                    },
+                    grid: {
+                        color: 'rgba(255,255,255,0.08)'
+                    }
+                }
             }
         }
     });
 </script>
-
 {% endblock %}
