@@ -44,6 +44,13 @@ class DashboardController extends AbstractDashboardController
             ->getQuery()
             ->getSingleScalarResult();
 
+        if ($this->isGranted('ROLE_CLIENT')){
+            return $this->render('admin/dashboard.html.twig', [
+                'companyCount' => $companyCount,
+            ]);
+        }
+
+        
         return $this->render('admin/dashboard.html.twig', [
             'companyCount' => $companyCount,
             'conversationCount' => $conversationCount,

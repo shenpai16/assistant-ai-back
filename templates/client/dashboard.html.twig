@@ -1,0 +1,140 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content %}
+
+<style>
+    .client-dashboard {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        padding: 20px;
+    }
+
+    .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 25px;
+    }
+
+    .kpi-card {
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(18px);
+        border-radius: 18px;
+        padding: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+        color: white;
+        transition: 0.3s;
+    }
+
+    .kpi-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.35);
+    }
+
+    .section-card {
+        background: rgba(255, 255, 255, 0.10);
+        backdrop-filter: blur(15px);
+        border-radius: 18px;
+        padding: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.20);
+        color: white;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    }
+
+    h2 {
+        color: white;
+        margin-bottom: 15px;
+    }
+
+    .conversation-item {
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .conversation-item:last-child {
+        border-bottom: none;
+    }
+
+    .conversation-item strong {
+        color: #fff;
+    }
+
+    .conversation-item span {
+        opacity: 0.8;
+        font-size: 14px;
+    }
+</style>
+
+<div class="client-dashboard">
+
+    <h1 style="color:white;">Bienvenue dans votre espace client</h1>
+
+    <!-- KPIs -->
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <h3>Messages reçus</h3>
+            <p style="font-size: 28px; font-weight: bold;">{{ messagesCount }}</p>
+        </div>
+
+        <div class="kpi-card">
+            <h3>Conversations</h3>
+            <p style="font-size: 28px; font-weight: bold;">{{ conversationsCount }}</p>
+        </div>
+
+        <div class="kpi-card">
+            <h3>Messages (24h)</h3>
+            <p style="font-size: 28px; font-weight: bold;">{{ messagesLast24h }}</p>
+        </div>
+    </div>
+
+    <!-- Activité -->
+    <div class="section-card">
+        <h2>Activité récente</h2>
+        <canvas id="clientMessagesChart" height="120"></canvas>
+    </div>
+
+    <!-- Dernières conversations -->
+    <div class="section-card">
+        <h2>Dernières conversations</h2>
+
+        {% if lastConversations is defined and lastConversations|length > 0 %}
+            {% for conv in lastConversations %}
+                <div class="conversation-item">
+                    <strong>{{ conv.sessionId }}</strong><br>
+                    <span>{{ conv.createdAt|date('d/m/Y H:i') }}</span>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p style="opacity:0.7;">Aucune conversation récente.</p>
+        {% endif %}
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('clientMessagesChart');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {{ chartLabels|json_encode|raw }},
+            datasets: [{
+                label: 'Messages',
+                data: {{ chartData|json_encode|raw }},
+                borderColor: '#4ea1ff',
+                backgroundColor: 'rgba(78,161,255,0.3)',
+                borderWidth: 2,
+                tension: 0.3,
+                fill: true
+            }]
+        },
+        options: {
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+</script>
+
+{% endblock %}
