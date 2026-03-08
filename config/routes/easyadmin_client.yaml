@@ -1,0 +1,3 @@
+easyadmin_client:
+    resource: '../src/Controller/Client/'
+    type: easyadmin.routes

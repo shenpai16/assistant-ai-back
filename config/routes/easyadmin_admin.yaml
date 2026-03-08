@@ -1,0 +1,3 @@
+easyadmin_admin:
+    resource: '../src/Controller/Admin/'
+    type: easyadmin.routes
