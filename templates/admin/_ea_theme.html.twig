@@ -1,0 +1,237 @@
+{% block head_stylesheets %}
+<style>
+
+/* ------------------------------ */
+/* 🎨 BACKGROUND GLOBAL PREMIUM   */
+/* ------------------------------ */
+
+body {
+    background: radial-gradient(circle at 20% 20%, #1b2735, #090a0f 70%);
+    background-attachment: fixed;
+    color: #f2f6ff !important;
+    font-family: 'Inter', sans-serif;
+}
+
+
+
+/* ------------------------------ */
+/* 🧊 SIDEBAR GLASSMORPHISM       */
+/* ------------------------------ */
+
+.sidebar {
+    background: rgba(255, 255, 255, 0.06) !important;
+    backdrop-filter: blur(18px);
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 20px;
+}
+
+.sidebar .menu-item a {
+    color: #9fc5ff !important;
+    opacity: 0.75;
+    padding: 10px 18px;
+    border-radius: 10px;
+    transition: 0.25s ease;
+    font-weight: 500;
+}
+
+.sidebar .menu-item.active a,
+.sidebar .menu-item a:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.18);
+    color: #4fa3ff !important;
+    transform: translateX(6px);
+    box-shadow: 0 0 8px rgba(169, 201, 255, 0.25);
+}
+
+
+
+/* ------------------------------ */
+/* 🧭 HEADER NAVBAR               */
+/* ------------------------------ */
+
+.navbar {
+    background: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.navbar .navbar-brand {
+    color: #e8f1ff !important;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+
+
+/* ------------------------------ */
+/* 📦 CARDS & PANELS (FIX)        */
+/* ------------------------------ */
+
+.content-panel, .ea-card {
+    background: rgba(20, 24, 33, 0.55) !important; /* FIX: plus de blanc */
+    backdrop-filter: blur(16px);
+    border-radius: 16px !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25) !important;
+    padding: 20px;
+}
+
+
+
+/* ------------------------------ */
+/* 📝 FORMULAIRES                 */
+/* ------------------------------ */
+
+.form-control {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    color: white !important;
+    border-radius: 12px !important;
+}
+
+
+
+/* ------------------------------ */
+/* 🔘 BOUTONS                     */
+/* ------------------------------ */
+
+.btn-primary {
+    background: linear-gradient(135deg, #3d6bff, #6aa8ff) !important;
+    border-radius: 10px !important;
+    border: none !important;
+    padding: 10px 20px !important;
+    color: white !important;
+    font-weight: 600;
+}
+
+
+
+/* ------------------------------ */
+/* 📊 TABLEAU LIST VIEW — DARK    */
+/* ------------------------------ */
+
+.datagrid {
+    background: rgba(20, 24, 33, 0.65) !important;
+    border-radius: 14px !important;
+    overflow: hidden;
+}
+
+.datagrid thead th {
+    background: rgba(255,255,255,0.10) !important;
+    color: #e8eeff !important;
+}
+
+.datagrid tbody tr {
+    background: rgba(255,255,255,0.03) !important;
+}
+
+.datagrid tbody tr:nth-child(even) {
+    background: rgba(255,255,255,0.05) !important;
+}
+
+.datagrid tbody tr:hover {
+    background: rgba(255,255,255,0.12) !important;
+}
+
+
+
+/* ------------------------------ */
+/* 🏷️ TITRE DE PAGE               */
+/* ------------------------------ */
+
+.content-header-title {
+    font-size: 1.8rem !important;
+    font-weight: 700 !important;
+    color: #f2f6ff !important;
+}
+
+/* ------------------------------ */
+/* 🎯 FIX : bande blanche du haut */
+/* ------------------------------ */
+
+.content-header,
+.content-header-title,
+.page-actions {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+.content-header {
+    padding: 20px 0 !important;
+}
+
+.content-header-title h1.title {
+    color: #f2f6ff !important;
+}
+
+.page-actions .btn {
+    background: linear-gradient(135deg, #3d6bff, #6aa8ff) !important;
+    color: white !important;
+    border: none !important;
+}
+
+/* ------------------------------ */
+/* 🎯 Lisibilité des titres colonnes */
+/* ------------------------------ */
+
+.datagrid thead th a {
+    color: #bcd4ff !important;        /* bleu clair lisible */
+    font-weight: 600 !important;
+    text-decoration: none !important;
+}
+
+.datagrid thead th a:hover {
+    color: #e6f0ff !important;        /* encore plus clair au hover */
+    text-decoration: underline !important;
+}
+
+.datagrid thead th .icon svg {
+    color: #bcd4ff !important;        /* icône de tri */
+    width: 12px;
+    height: 12px;
+    opacity: 0.8;
+}
+
+.datagrid thead th a:hover .icon svg {
+    color: #e6f0ff !important;
+    opacity: 1;
+}
+
+
+/* ------------------------------ */
+/* 🎯 Lisibilité des labels form  */
+/* ------------------------------ */
+
+.form-control-label,
+.form-group label,
+label.form-control-label {
+    color: #cfe0ff !important;      /* bleu clair lisible */
+    font-weight: 600 !important;
+    font-size: 0.95rem !important;
+}
+
+.form-control-label.required::after {
+    color: #ff6b6b !important;      /* astérisque rouge premium */
+}
+
+
+/* ------------------------------ */
+/* 🎯 Lisibilité des textes d’aide */
+/* ------------------------------ */
+
+.form-text,
+.form-help,
+small.form-text,
+small.form-help {
+    color: #9fb7d9 !important;       /* bleu-gris lisible */
+    font-size: 0.85rem !important;
+    opacity: 0.9;
+    margin-top: 4px;
+    display: block;
+}
+
+.form-help strong {
+    color: #cfe0ff !important;       /* si jamais tu mets du <strong> dans l’aide */
+}
+</style>
+{% endblock %}
