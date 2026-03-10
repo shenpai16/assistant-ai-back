@@ -8,6 +8,7 @@ use App\Entity\Message;
 use App\Controller\Admin\CompanyCrudController;
 use App\Controller\Admin\ConversationCrudController;
 use App\Controller\Admin\MessageCrudController;
+use App\Controller\Admin\UserCrudController;
 
 use Doctrine\Persistence\ManagerRegistry;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
@@ -74,6 +75,7 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkTo(CompanyCrudController::class, 'Entreprises', 'fa fa-building'),
             MenuItem::linkTo(ConversationCrudController::class, 'Conversations', 'fa fa-comments'),
             MenuItem::linkTo(MessageCrudController::class, 'Messages', 'fa fa-envelope'),
+            MenuItem::linkTo(UserCrudController::class, 'Utilisateurs', 'fa fa-users'),
         ];
     }
 }
