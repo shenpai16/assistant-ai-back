@@ -16,6 +16,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Symfony\Component\HttpFoundation\Response;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
+
 
 
 #[AdminDashboard(routePath: '/admin', routeName: 'admin')]
@@ -26,6 +28,13 @@ class DashboardController extends AbstractDashboardController
     public function __construct(ManagerRegistry $doctrine)
     {
         $this->doctrine = $doctrine;
+    }
+
+    public function configureAssets(): Assets
+    {
+        return Assets::new()
+            ->addHtmlContentToHead($this->renderView('admin/_ea_theme.html.twig'));
+       
     }
 
     public function index(): Response
@@ -63,7 +72,9 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('Assistant IA Back');
+            ->setTitle('Assistant IA Back')
+            ->renderContentMaximized()
+            ->disableDarkMode();
     }
 
      public function configureMenuItems(): iterable
