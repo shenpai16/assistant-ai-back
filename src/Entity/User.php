@@ -101,6 +101,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Transient] // si tu es en Symfony 7 / Doctrine 3
     private ?string $plainPassword = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $stripe_customer_id = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $stripe_default_payment_method = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $stripe_portal_url = null;
+
+    #[ORM\ManyToOne(inversedBy: 'user_id')]
+    private ?Subscription $subscription = null;
+
     public function getPlainPassword(): ?string
     {
         return $this->plainPassword;
@@ -137,6 +149,54 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCompany(?Company $company): static
     {
         $this->company = $company;
+
+        return $this;
+    }
+
+    public function getStripeCustomerId(): ?string
+    {
+        return $this->stripe_customer_id;
+    }
+
+    public function setStripeCustomerId(string $stripe_customer_id): static
+    {
+        $this->stripe_customer_id = $stripe_customer_id;
+
+        return $this;
+    }
+
+    public function getStripeDefaultPaymentMethod(): ?string
+    {
+        return $this->stripe_default_payment_method;
+    }
+
+    public function setStripeDefaultPaymentMethod(?string $stripe_default_payment_method): static
+    {
+        $this->stripe_default_payment_method = $stripe_default_payment_method;
+
+        return $this;
+    }
+
+    public function getStripePortalUrl(): ?string
+    {
+        return $this->stripe_portal_url;
+    }
+
+    public function setStripePortalUrl(?string $stripe_portal_url): static
+    {
+        $this->stripe_portal_url = $stripe_portal_url;
+
+        return $this;
+    }
+
+    public function getSubscription(): ?Subscription
+    {
+        return $this->subscription;
+    }
+
+    public function setSubscription(?Subscription $subscription): static
+    {
+        $this->subscription = $subscription;
 
         return $this;
     }
