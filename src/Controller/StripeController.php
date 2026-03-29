@@ -14,6 +14,7 @@ use Stripe\StripeClient;
 use Stripe\Webhook;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 final class StripeController extends AbstractController
 {
@@ -55,7 +56,9 @@ final class StripeController extends AbstractController
                     'price' => 'price_1TGHAKIKELX53FhQMqbqmxYW',
                     'quantity' => 1,
                 ]],
-                'success_url' => 'http://localhost:8000/success?session_id={CHECKOUT_SESSION_ID}',
+                'success_url' => $this->generateUrl('app_stripe_success', [
+                    'session_id' => '{CHECKOUT_SESSION_ID}',
+                ], UrlGeneratorInterface::ABSOLUTE_URL),
                 'cancel_url' => 'http://localhost:8000/cancel',
             ]);
 
@@ -64,5 +67,19 @@ final class StripeController extends AbstractController
         } catch (\Exception $e) {
             return new JsonResponse(['error' => $e->getMessage()], 500);
         }
+    }
+
+    #[Route('/success', name: 'app_stripe_success')]
+    public function success(Request $request): Response
+    {
+        $sessionId = $request->query->get('session_id');
+
+        if (!$sessionId) {
+            return new Response('Session ID is missing', 400);
+        }
+
+        return $this->render('stripe/success.html.twig', [
+            'sessionId' => $sessionId,
+        ]);
     }
 }
