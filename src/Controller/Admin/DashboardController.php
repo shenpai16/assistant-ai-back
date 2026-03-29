@@ -57,6 +57,7 @@ class DashboardController extends AbstractDashboardController
         if ($this->isGranted('ROLE_CLIENT')){
             return $this->render('admin/dashboard.html.twig', [
                 'companyCount' => $companyCount,
+                'stripe_public_key' => $_ENV['STRIPE_PUBLIC_KEY'],
             ]);
         }
 
@@ -66,6 +67,7 @@ class DashboardController extends AbstractDashboardController
             'conversationCount' => $conversationCount,
             'messageCount' => $messageCount,
             'messageLast24h' => $messageLast24h,
+            'stripe_public_key' => $_ENV['STRIPE_PUBLIC_KEY'],
         ]);
     }
 
@@ -87,6 +89,7 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkTo(ConversationCrudController::class, 'Conversations', 'fa fa-comments'),
             MenuItem::linkTo(MessageCrudController::class, 'Messages', 'fa fa-envelope'),
             MenuItem::linkTo(UserCrudController::class, 'Utilisateurs', 'fa fa-users'),
+
         ];
     }
 }
