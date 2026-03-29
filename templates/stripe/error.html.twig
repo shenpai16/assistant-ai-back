@@ -1,0 +1,91 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Paiement échoué{% endblock %}
+
+{% block body %}
+<style>
+    .error-wrapper {
+        max-width: 650px;
+        margin: 80px auto;
+        padding: 40px;
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(18px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+        text-align: center;
+        color: white;
+        animation: fadeIn 0.8s ease forwards;
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    @keyframes fadeIn {
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .error-title {
+        font-size: 2.4rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        background: linear-gradient(120deg, #ff4d4d, #ff8a8a);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .error-text {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        margin-bottom: 35px;
+    }
+
+    .error-btn {
+        display: inline-block;
+        padding: 14px 28px;
+        background: linear-gradient(120deg, #ff4d4d, #ff6b6b);
+        color: white;
+        border-radius: 12px;
+        text-decoration: none;
+        font-size: 1.15rem;
+        font-weight: 600;
+        transition: 0.25s;
+        box-shadow: 0 8px 20px rgba(255,0,0,0.25);
+    }
+
+    .error-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 28px rgba(255,0,0,0.35);
+    }
+
+    body {
+        background: linear-gradient(120deg, #0d1b3d, #1e3c72, #2a5298);
+        background-size: 300% 300%;
+        animation: gradientMove 12s ease infinite;
+        min-height: 100vh;
+        padding-top: 60px;
+    }
+
+    @keyframes gradientMove {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+</style>
+
+<div class="error-wrapper">
+    <h1 class="error-title">❌ Paiement annulé</h1>
+
+    <p class="error-text">
+        Le paiement n’a pas pu être finalisé.<br>
+        Vous pouvez réessayer à tout moment.
+    </p>
+
+    <a href="/admin" class="error-btn">
+        Retour au tableau de bord
+    </a>
+</div>
+
+{% endblock %}
