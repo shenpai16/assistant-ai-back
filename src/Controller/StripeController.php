@@ -59,7 +59,10 @@ final class StripeController extends AbstractController
                 'success_url' => $this->generateUrl('app_stripe_success', [
                     'session_id' => '{CHECKOUT_SESSION_ID}',
                 ], UrlGeneratorInterface::ABSOLUTE_URL),
-                'cancel_url' => 'http://localhost:8000/cancel',
+
+                'cancel_url' => $this->generateUrl('app_stripe_cancel', [
+                    'session_id' => '{CHECKOUT_SESSION_ID}',
+                ], UrlGeneratorInterface::ABSOLUTE_URL),
             ]);
 
             return new JsonResponse(['sessionId' => $session->id]);
@@ -79,6 +82,20 @@ final class StripeController extends AbstractController
         }
 
         return $this->render('stripe/success.html.twig', [
+            'sessionId' => $sessionId,
+        ]);
+    }
+
+    #[Route('/cancel', name: 'app_stripe_cancel')]
+    public function cancel(Request $request): Response
+    {
+        $sessionId = $request->query->get('session_id');
+
+        if (!$sessionId) {
+            return new Response('Session ID is missing', 400);
+        }
+
+        return $this->render('stripe/cancel.html.twig', [
             'sessionId' => $sessionId,
         ]);
     }
