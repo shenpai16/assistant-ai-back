@@ -40,6 +40,15 @@ class Company
     #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'company')]
     private Collection $users;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $stripeCustomerId = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $stripeSubscriptionId = null;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $subscriptionPlan = null;
+
     public function __construct()
     {
         $this->conversations = new ArrayCollection();
@@ -161,6 +170,42 @@ class Company
                 $user->setCompany(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStripeCustomerId(): ?string
+    {
+        return $this->stripeCustomerId;
+    }
+
+    public function setStripeCustomerId(?string $stripeCustomerId): static
+    {
+        $this->stripeCustomerId = $stripeCustomerId;
+
+        return $this;
+    }
+
+    public function getStripeSubscriptionId(): ?string
+    {
+        return $this->stripeSubscriptionId;
+    }
+
+    public function setStripeSubscriptionId(?string $stripeSubscriptionId): static
+    {
+        $this->stripeSubscriptionId = $stripeSubscriptionId;
+
+        return $this;
+    }
+
+    public function getSubscriptionPlan(): ?string
+    {
+        return $this->subscriptionPlan;
+    }
+
+    public function setSubscriptionPlan(?string $subscriptionPlan): static
+    {
+        $this->subscriptionPlan = $subscriptionPlan;
 
         return $this;
     }
