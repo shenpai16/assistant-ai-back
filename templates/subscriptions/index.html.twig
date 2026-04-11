@@ -1,0 +1,164 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block title %}Abonnements{% endblock %}
+
+{% block content %}
+
+<style>
+    /* Fond appliqué sur la zone de contenu EasyAdmin */
+    .content-wrapper {
+        background: linear-gradient(120deg, #0d1b3d, #1e3c72, #2a5298);
+        background-size: 300% 300%;
+        animation: gradientMove 12s ease infinite;
+        min-height: 100vh;
+        padding: 40px 20px !important;
+        color: white;
+    }
+
+    @keyframes gradientMove {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    .plans-container {
+        max-width: 1200px;
+        margin: auto;
+    }
+
+    .plans-title {
+        text-align: center;
+        font-size: 2.4rem;
+        font-weight: 700;
+        margin-bottom: 40px;
+    }
+
+    /* GRID 3 COLONNES FIXES */
+    .plans-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+    }
+
+    .plan-card {
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(18px);
+        border-radius: 18px;
+        padding: 30px;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+        animation: fadeIn 0.8s ease forwards;
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    @keyframes fadeIn {
+        to { transform: translateY(0); opacity: 1; }
+    }
+
+    .plan-title {
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        text-decoration: none;
+        color: white;
+    }
+
+    .plan-price {
+        font-size: 1.4rem;
+        margin-bottom: 15px;
+        opacity: 0.9;
+    }
+
+    .plan-desc {
+        font-size: 1rem;
+        opacity: 0.8;
+        margin-bottom: 20px;
+    }
+
+    .plan-features {
+        list-style: none;
+        padding: 0;
+        margin-bottom: 25px;
+    }
+
+    .plan-features li {
+        margin-bottom: 8px;
+        opacity: 0.9;
+    }
+
+    .plan-btn {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(120deg, #4CAF50, #2ecc71);
+        border: none;
+        border-radius: 12px;
+        color: white;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.25s;
+    }
+
+    .plan-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 28px rgba(0,255,120,0.35);
+    }
+</style>
+
+<div class="plans-container">
+
+    <h1 class="plans-title">Choisissez votre abonnement</h1>
+
+    <div class="plans-grid">
+
+        <div class="plan-card">
+            <h2 class="plan-title">Starter</h2>
+            <p class="plan-price">9,99€ / mois</p>
+            <p class="plan-desc">Accès complet au chatbot IA</p>
+            <ul class="plan-features">
+                <li>✔ Chatbot illimité</li>
+                <li>✖ Accès aux conversations</li>
+                <li>✖ Génération de devis</li>
+            </ul>
+            <button class="plan-btn" onclick="subscribe('starter')">S’abonner</button>
+        </div>
+
+        <div class="plan-card">
+            <h2 class="plan-title">Business</h2>
+            <p class="plan-price">19,99€ / mois</p>
+            <p class="plan-desc">Chatbot + accès aux conversations</p>
+            <ul class="plan-features">
+                <li>✔ Chatbot illimité</li>
+                <li>✔ Accès aux conversations</li>
+                <li>✖ Génération de devis</li>
+            </ul>
+            <button class="plan-btn" onclick="subscribe('business')">S’abonner</button>
+        </div>
+
+        <div class="plan-card">
+            <h2 class="plan-title">Enterprise</h2>
+            <p class="plan-price">39,99€ / mois</p>
+            <p class="plan-desc">Toutes les fonctionnalités débloquées</p>
+            <ul class="plan-features">
+                <li>✔ Chatbot illimité</li>
+                <li>✔ Accès aux conversations</li>
+                <li>✔ Génération automatique de devis</li>
+            </ul>
+            <button class="plan-btn" onclick="subscribe('enterprise')">S’abonner</button>
+        </div>
+
+    </div>
+</div>
+
+<script>
+function subscribe(plan) {
+    fetch(`/create-checkout-session/${plan}`)
+        .then(res => res.json())
+        .then(data => {
+            stripe.redirectToCheckout({ sessionId: data.sessionId });
+        });
+}
+</script>
+
+{% endblock %}
