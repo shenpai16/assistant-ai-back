@@ -80,6 +80,15 @@ class DashboardController extends AbstractDashboardController
             ->disableDarkMode();
     }
 
+
+    #[Route('/admin/abonnements', name: 'admin_subscriptions')]
+    public function abonnements(): Response
+    {
+        return $this->render('subscriptions/index.html.twig', [
+            'stripe_public_key' => $_ENV['STRIPE_PUBLIC_KEY'],
+        ]);
+    }
+
     
 
     public function configureMenuItems(): iterable

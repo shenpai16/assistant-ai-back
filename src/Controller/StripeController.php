@@ -25,10 +25,17 @@ final class StripeController extends AbstractController
         $this->stripeSecretKey = $stripeSecretKey;
     }
 
-    #[Route('/create-checkout-session', name: 'app_create_checkout_session')]
+    private array $prices = [
+        'starter' => 'price_1TL3DXIKELX53FhQct72F213',
+        'business' => 'price_1TL3DnIKELX53FhQ7ykrsmG5',
+        'enterprise' => 'price_1TL3E0IKELX53FhQcyIC0wE1',
+    ];
+
+    #[Route('/create-checkout-session/{plan}', name: 'app_create_checkout_session')]
     public function createCheckoutSession(
         StripeService $stripeService,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        string $plan
     ): JsonResponse
     {
         try {   
@@ -38,10 +45,13 @@ final class StripeController extends AbstractController
                 return new JsonResponse(['error' => 'User not authenticated'], 401);
             }
 
+            if (!isset($this->prices[$plan])) {
+                return new JsonResponse(['error' => 'Invalid plan selected'], 400);
+            }
+
             if (!$user->getStripeCustomerId()) {
                 $customerId = $stripeService->createCustomer($user);
                 $user->setStripeCustomerId($customerId);
-
                 $em->persist($user);
                 $em->flush();
             }
@@ -53,7 +63,7 @@ final class StripeController extends AbstractController
                 'customer' => $user->getStripeCustomerId(),
                 'payment_method_types' => ['card'],
                 'line_items' => [[
-                    'price' => 'price_1TGHAKIKELX53FhQMqbqmxYW',
+                    'price' => $this->prices[$plan],
                     'quantity' => 1,
                 ]],
                 'success_url' => $this->generateUrl('app_stripe_success', [
