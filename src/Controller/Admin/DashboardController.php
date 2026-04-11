@@ -10,6 +10,7 @@ use App\Controller\Admin\ConversationCrudController;
 use App\Controller\Admin\MessageCrudController;
 use App\Controller\Admin\UserCrudController;
 
+
 use Doctrine\Persistence\ManagerRegistry;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -17,7 +18,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Symfony\Component\HttpFoundation\Response;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
-
+use Symfony\Component\Routing\Attribute\Route;
 
 
 #[AdminDashboard(routePath: '/admin', routeName: 'admin')]
@@ -79,7 +80,9 @@ class DashboardController extends AbstractDashboardController
             ->disableDarkMode();
     }
 
-     public function configureMenuItems(): iterable
+    
+
+    public function configureMenuItems(): iterable
     {
         return [
             MenuItem::linkToDashboard('Dashboard', 'fa fa-home'),
@@ -89,6 +92,10 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkTo(ConversationCrudController::class, 'Conversations', 'fa fa-comments'),
             MenuItem::linkTo(MessageCrudController::class, 'Messages', 'fa fa-envelope'),
             MenuItem::linkTo(UserCrudController::class, 'Utilisateurs', 'fa fa-users'),
+            MenuItem::linkToRoute('Abonnements', 'fa fa-credit-card', 'admin_subscriptions'),
+
+
+
 
         ];
     }
